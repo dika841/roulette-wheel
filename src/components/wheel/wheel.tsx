@@ -41,7 +41,7 @@ export function RouletteWheel() {
       setIsWinner(false);
     }
   };
-  console.log(winnerData);
+
   return (
     <div className="flex flex-col gap-4">
       {isWinner && <Celebration />}
