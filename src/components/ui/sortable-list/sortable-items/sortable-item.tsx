@@ -1,82 +1,46 @@
-import { createContext, useContext, useMemo } from "react";
-import type { CSSProperties, PropsWithChildren } from "react";
-import type {
-  DraggableSyntheticListeners,
-  UniqueIdentifier,
-} from "@dnd-kit/core";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { Button } from "@/components/ui/button";
+import { useTempContext } from "@/hooks/use-temp-context";
 
-interface Props {
-  id: UniqueIdentifier;
-}
-
-interface Context {
-  attributes: Record<string, any>;
-  listeners: DraggableSyntheticListeners;
-  ref(node: HTMLElement | null): void;
-}
-
-const SortableItemContext = createContext<Context>({
-  attributes: {},
-  listeners: undefined,
-  ref() {},
-});
-
-export function SortableItem({ children, id }: PropsWithChildren<Props>) {
+export function SortableItem({
+  id,
+  children,
+}: {
+  id: string;
+  children: React.ReactNode;
+}) {
   const {
     attributes,
-    isDragging,
     listeners,
     setNodeRef,
     setActivatorNodeRef,
     transform,
     transition,
   } = useSortable({ id });
-  const context = useMemo(
-    () => ({
-      attributes,
-      listeners,
-      ref: setActivatorNodeRef,
-    }),
-    [attributes, listeners, setActivatorNodeRef]
-  );
-  const style: CSSProperties = {
-    opacity: isDragging ? 0.4 : undefined,
+
+  const { removeItem } = useTempContext();
+
+  const style = {
     transform: CSS.Translate.toString(transform),
     transition,
   };
 
   return (
-    <SortableItemContext.Provider value={context}>
-      <li
-        className="flex justify-between flex-grow items-center p-4 bg-white shadow-md rounded-md box-border list-none text-gray-800 font-normal text-base font-sans"
-        ref={setNodeRef}
-        style={style}
-      >
-        {children}
-      </li>
-    </SortableItemContext.Provider>
-  );
-}
-
-export function DragHandle() {
-  const { attributes, listeners, ref } = useContext(SortableItemContext);
-
-  return (
-    <button
-      className="flex w-3 p-4 items-center justify-center flex-none touch-none cursor-[var(--cursor,pointer)] rounded-md border-none outline-none appearance-none bg-transparent focus-visible:ring-2 focus-visible:ring-blue-500 hover:bg-gray-100 "
-      {...attributes}
-      {...listeners}
-      ref={ref}
+    <li
+      ref={setNodeRef}
+      style={style}
+      className="flex items-center justify-between p-4 border rounded-md bg-white shadow"
     >
-      <svg
-        viewBox="0 0 20 20"
-        width="12"
-        className="flex-none m-auto h-full overflow-visible fill-gray-400"
-      >
-        <path d="M7 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 2zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 7 14zm6-8a2 2 0 1 0-.001-4.001A2 2 0 0 0 13 6zm0 2a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 8zm0 6a2 2 0 1 0 .001 4.001A2 2 0 0 0 13 14z"></path>
-      </svg>
-    </button>
+      <div ref={setActivatorNodeRef} {...attributes} {...listeners}>
+        <span className="cursor-move">≡</span>
+      </div>
+      <div className="flex-1 px-4">{children}</div>
+      <Button variant="secondary" onClick={() => removeItem(id)}>
+        Hapus
+      </Button>
+    </li>
   );
 }
+
+export const DragHandle = () => null; // tidak digunakan karena handle ada di dalam

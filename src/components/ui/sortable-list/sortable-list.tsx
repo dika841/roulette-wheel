@@ -16,6 +16,7 @@ import {
 import React from "react";
 import { SortableOverlay } from "./sortable-overlay/sortable-overlay";
 import { DragHandle, SortableItem } from "./sortable-items/sortable-item";
+
 interface BaseItem {
   id: UniqueIdentifier;
 }
@@ -25,6 +26,7 @@ interface Props<T extends BaseItem> {
   onChange(items: T[]): void;
   renderItem(item: T): ReactNode;
 }
+
 export const SortableList = <T extends BaseItem>({
   items,
   onChange,
@@ -41,6 +43,7 @@ export const SortableList = <T extends BaseItem>({
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+
   return (
     <DndContext
       sensors={sensors}
@@ -51,7 +54,6 @@ export const SortableList = <T extends BaseItem>({
         if (over && active.id !== over?.id) {
           const activeIndex = items.findIndex(({ id }) => id === active.id);
           const overIndex = items.findIndex(({ id }) => id === over.id);
-
           onChange(arrayMove(items, activeIndex, overIndex));
         }
         setActive(null);
@@ -61,7 +63,7 @@ export const SortableList = <T extends BaseItem>({
       }}
     >
       <SortableContext items={items}>
-        <ul className="flex flex-col gap-10 p-0 list-none" role="application">
+        <ul className="flex flex-col gap-4 p-0 list-none">
           {items.map((item) => (
             <React.Fragment key={item.id}>{renderItem(item)}</React.Fragment>
           ))}
