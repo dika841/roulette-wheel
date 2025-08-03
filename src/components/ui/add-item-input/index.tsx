@@ -15,13 +15,13 @@ export function AddItemForm() {
   };
 
   return (
-    <div className="flex gap-2 mb-4">
+    <div className="flex justify-center md:justify-start gap-2 mb-4">
       <form
         onSubmit={(e) => {
           e.preventDefault();
           handleAdd();
         }}
-        className="flex gap-2 mb-4"
+        className="flex flex-col md:flex-row  gap-2 mb-4"
       >
         <Input
           placeholder="Masukkan nama item"

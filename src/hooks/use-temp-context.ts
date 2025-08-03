@@ -7,6 +7,11 @@ interface TempContextType {
   removeItem: (id: string) => void;
   winnerData: TempItem[];
   setWinnerData: React.Dispatch<React.SetStateAction<TempItem[]>>;
+  winnerName: string;
+  setWinnerName: React.Dispatch<React.SetStateAction<string>>;
+  setModalWinner: React.Dispatch<React.SetStateAction<boolean>>;
+  showModalWinner: boolean;
+  removeAll: () => void;
 }
 export const TempContext = createContext<TempContextType | undefined>(
   undefined

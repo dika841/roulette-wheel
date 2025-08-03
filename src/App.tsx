@@ -1,17 +1,25 @@
 import { RouletteWheel } from "./components/wheel/wheel";
 import { SortableList } from "./components/ui/sortable-list/sortable-list";
 import { useTempContext } from "./hooks/use-temp-context";
-import { Card, CardContent, CardHeader } from "./components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "./components/ui/card";
 import { AddItemForm } from "./components/ui/add-item-input";
+import { ModalWinner } from "./components/modal-winner";
+import { Button } from "./components/ui/button";
 
 function SortableSection() {
   const { data, setData } = useTempContext();
+  const startDataIndex = data.filter((_, idx) => idx > 0);
 
   return (
     <div className="flex flex-col gap-4">
       <AddItemForm />
       <SortableList
-        items={data}
+        items={startDataIndex}
         onChange={(newItems) => setData(newItems)}
         renderItem={(item) => (
           <SortableList.Item id={item.id}>
@@ -24,7 +32,14 @@ function SortableSection() {
 }
 
 function App() {
-  const { winnerData } = useTempContext();
+  const {
+    winnerData,
+    winnerName,
+    showModalWinner,
+    setModalWinner,
+    setWinnerName,
+    removeAll,
+  } = useTempContext();
 
   return (
     <main className="min-h-1/2 bg-gray-50 py-10 px-6 rounded-xl w-full">
@@ -35,7 +50,7 @@ function App() {
         <Card className="min-h-[500px] shadow-md">
           <CardHeader>
             <h1 className="text-xl font-semibold text-gray-800">
-              🎯 List Peserta
+              🎯 List Target
             </h1>
           </CardHeader>
           <CardContent>
@@ -49,9 +64,7 @@ function App() {
 
         <Card className="min-h-[500px] shadow-md">
           <CardHeader>
-            <h1 className="text-xl font-semibold text-gray-800">
-              🏆 List Pemenang
-            </h1>
+            <h1 className="text-xl font-semibold text-gray-800">🏆 Winner</h1>
           </CardHeader>
           <CardContent>
             {winnerData.length > 0 ? (
@@ -66,8 +79,22 @@ function App() {
               <p className="text-gray-800 text-center">Belum ada pemenang</p>
             )}
           </CardContent>
+          <CardFooter>
+            {winnerData.length > 0 && (
+              <Button onClick={() => removeAll()}>Hapus Semua</Button>
+            )}
+          </CardFooter>
         </Card>
       </div>
+      <ModalWinner
+        isOpen={showModalWinner}
+        onClose={() => {
+          setModalWinner(false);
+          setWinnerName("");
+        }}
+        setShowModal={setModalWinner}
+        winnerName={winnerName}
+      />
     </main>
   );
 }

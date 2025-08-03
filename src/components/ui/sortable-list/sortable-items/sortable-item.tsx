@@ -43,4 +43,4 @@ export function SortableItem({
   );
 }
 
-export const DragHandle = () => null; // tidak digunakan karena handle ada di dalam
+export const DragHandle = () => null;
