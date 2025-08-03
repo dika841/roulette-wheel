@@ -24,7 +24,7 @@ export function AddItemForm() {
         className="flex flex-col md:flex-row  gap-2 mb-4"
       >
         <Input
-          placeholder="Masukkan nama item"
+          placeholder="Input data"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
